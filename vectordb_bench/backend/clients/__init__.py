@@ -48,6 +48,7 @@ class DB(Enum):
     Vespa = "Vespa"
     LanceDB = "LanceDB"
     OceanBase = "OceanBase"
+    Hologres = "Hologres"
 
     @property
     def init_cls(self) -> type[VectorDB]:  # noqa: PLR0911, PLR0912, C901, PLR0915
@@ -181,6 +182,11 @@ class DB(Enum):
             from .lancedb.lancedb import LanceDB
 
             return LanceDB
+
+        if self == DB.Hologres:
+            from .hologres.hologres import Hologres
+
+            return Hologres
 
         msg = f"Unknown DB: {self.name}"
         raise ValueError(msg)
@@ -318,6 +324,11 @@ class DB(Enum):
 
             return LanceDBConfig
 
+        if self == DB.Hologres:
+            from .hologres.config import HologresConfig
+
+            return HologresConfig
+
         msg = f"Unknown DB: {self.name}"
         raise ValueError(msg)
 
@@ -429,6 +440,11 @@ class DB(Enum):
             from .lancedb.config import _lancedb_case_config
 
             return _lancedb_case_config.get(index_type)
+
+        if self == DB.Hologres:
+            from .hologres.config import HologresIndexConfig
+
+            return HologresIndexConfig
 
         # DB.Pinecone, DB.Chroma, DB.Redis
         return EmptyDBCaseConfig
